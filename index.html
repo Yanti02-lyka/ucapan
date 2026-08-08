@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#ffeef5" />
+<title>Happy Birthday, Sayangku 🎂</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { height:100%; }
+  body {
+    font-family:'Poppins', sans-serif;
+    background: linear-gradient(135deg, #ffeef5 0%, #fde2ef 45%, #e7d9fb 100%);
+    overflow:hidden;
+    color:#7a4a63;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .hidden { display:none !important; }
+
+  /* ============ SCREEN SYSTEM ============ */
+  .screen {
+    position:fixed; inset:0; z-index:2;
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    gap:22px; padding:20px; text-align:center;
+    opacity:0; visibility:hidden;
+    transition:opacity .9s ease, visibility .9s;
+  }
+  .screen.active { opacity:1; visibility:visible; }
+
+  .hint { font-size:clamp(13px, 2.8vw, 16px); font-weight:300; animation:pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:.55} 50%{opacity:1} }
+
+  .btn {
+    font-family:'Poppins'; font-weight:600; font-size:15px;
+    padding:14px 32px; border:none; border-radius:999px;
+    background:linear-gradient(135deg, #ff7bac, #ff5f96);
+    color:#fff; cursor:pointer;
+    box-shadow:0 10px 24px rgba(255,123,172,.45);
+    transition:transform .2s;
+  }
+  .btn:hover { transform:translateY(-2px) scale(1.04); }
+
+  /* ============ SCREEN 1: AMPLOP ============ */
+  .envelope {
+    position:relative; width:min(340px, 86vw); aspect-ratio:8/5;
+    cursor:pointer; perspective:900px;
+    filter:drop-shadow(0 18px 30px rgba(214,106,147,.35));
+    transition:transform .3s;
+  }
+  .envelope:hover { transform:scale(1.03); }
+  .env-back  { position:absolute; inset:0; background:#f7a8c4; border-radius:10px; }
+  .env-letter {
+    position:absolute; left:6%; right:6%; top:8%; bottom:8%; z-index:1;
+    background:#fff; border-radius:8px;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Dancing Script'; font-size:clamp(20px, 5vw, 28px); color:#d66a93;
+    transition:transform .8s .4s ease;
+  }
+  .env-front {
+    position:absolute; inset:0; z-index:2;
+    background:linear-gradient(#f9b8cf, #f5a3c1);
+    clip-path:polygon(0 0, 50% 45%, 100% 0, 100% 100%, 0 100%);
+  }
+  .env-flap {
+    position:absolute; inset:0; z-index:3;
+    background:linear-gradient(#f28cb4, #ee7fa9);
+    clip-path:polygon(0 0, 100% 0, 50% 55%);
+    transform-origin:top center;
+    transition:transform .6s ease, z-index 0s .3s;
+  }
+  .env-heart {
+    position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+    z-index:4; font-size:42px; animation:pulse 1.6s infinite; transition:opacity .4s;
+  }
+  .envelope.open .env-flap { transform:rotateX(180deg); z-index:0; }
+  .envelope.open .env-letter { transform:translateY(-75%); }
+  .envelope.open .env-heart { opacity:0; }
+
+  /* ============ SCREEN 2: KUE ============ */
+  .title-box { min-height:130px; padding-bottom:85px; display:flex; flex-direction:column; justify-content:flex-end; gap:6px; }
+  .big-title {
+    font-family:'Dancing Script'; font-size:clamp(38px, 9vw, 72px); color:#e0568f;
+    opacity:0; transform:scale(.5);
+    transition:.8s cubic-bezier(.2, 1.4, .4, 1);
+  }
+  .big-sub { font-size:clamp(14px, 3vw, 18px); opacity:0; transform:scale(.5); transition:.8s .2s cubic-bezier(.2,1.4,.4,1); }
+  .big-title.show, .big-sub.show { opacity:1; transform:scale(1); }
+
+  .cake-wrap { width:min(280px, 74vw); display:flex; flex-direction:column; align-items:center; }
+  .layer { position:relative; border-radius:16px 16px 8px 8px; }
+  .layer.top    { width:76%; height:70px; background:linear-gradient(#ffe3ee, #ffd0e2); }
+  .layer.bottom { width:100%; height:92px; background:linear-gradient(#ffd9e8, #ffc3da); }
+  .icing { position:absolute; top:0; left:0; right:0; height:22px; background:#fff7fb; border-radius:16px 16px 0 0; }
+  .icing span { position:absolute; top:16px; width:12px; background:inherit; border-radius:0 0 8px 8px; }
+  .icing span:nth-child(1){ left:6%;  height:16px; }
+  .icing span:nth-child(2){ left:20%; height:26px; }
+  .icing span:nth-child(3){ left:36%; height:18px; }
+  .icing span:nth-child(4){ left:52%; height:28px; }
+  .icing span:nth-child(5){ left:68%; height:20px; }
+  .icing span:nth-child(6){ left:84%; height:14px; }
+  .plate { width:116%; height:22px; background:#fff; border-radius:50%; margin-top:-6px; box-shadow:0 14px 26px rgba(180,120,160,.3); }
+
+  .candles {
+    position:absolute; bottom:calc(100% - 4px); left:0; right:0;
+    display:flex; justify-content:center; align-items:flex-end; gap:16px;
+  }
+  .candle {
+    position:relative; width:12px; border-radius:4px; cursor:pointer;
+    background:repeating-linear-gradient(45deg, #ff8fb3 0 6px, #fff 6px 12px);
+  }
+  .candle:nth-child(2n) { background:repeating-linear-gradient(45deg, #b79bff 0 6px, #fff 6px 12px); }
+  .candle::after { content:""; position:absolute; inset:-14px; } /* area tap diperbesar */
+  .candle:nth-child(1){ height:44px; } .candle:nth-child(2){ height:52px; }
+  .candle:nth-child(3){ height:48px; } .candle:nth-child(4){ height:56px; }
+  .candle:nth-child(5){ height:46px; }
+  .wick { position:absolute; bottom:100%; left:50%; margin-left:-1px; width:2px; height:6px; background:#8a5a44; }
+  .flame {
+    position:absolute; bottom:calc(100% + 5px); left:50%; margin-left:-8px;
+    width:16px; height:24px;
+    background:radial-gradient(circle at 50% 70%, #fff6c9 0 20%, #ffd34d 45%, #ff9d2e 75%, rgba(255,120,40,0) 100%);
+    border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;
+    filter:drop-shadow(0 0 10px rgba(255,180,60,.85));
+    transform-origin:50% 100%;
+    animation:flicker .35s infinite alternate;
+    transition:transform .25s, opacity .25s;
+  }
+  @keyframes flicker { from{ transform:scale(1) rotate(-2deg); } to{ transform:scale(1.1,.92) rotate(2deg); } }
+  .candle.out .flame { animation:none; transform:scale(0); opacity:0; }
+  .smoke { position:absolute; bottom:calc(100% + 6px); left:50%; margin-left:-4px; width:8px; height:8px; border-radius:50%; background:rgba(160,160,175,.55); opacity:0; }
+  .candle.out .smoke { animation:smoke 1.4s ease-out forwards; }
+  @keyframes smoke { 0%{opacity:.7; transform:translateY(0) scale(1);} 100%{opacity:0; transform:translateY(-46px) scale(2.4);} }
+
+  /* ============ SCREEN 3: SURAT ============ */
+  .paper {
+    width:min(560px, 92vw); max-height:62vh; overflow-y:auto;
+    background:#fff; border-radius:16px; padding:28px;
+    box-shadow:0 20px 50px rgba(180,120,160,.25);
+    text-align:left; font-size:clamp(14px, 2.6vw, 17px); line-height:1.9;
+    white-space:pre-wrap; font-weight:300;
+  }
+  .caret { display:inline-block; width:2px; height:1em; background:#e0568f; vertical-align:text-bottom; animation:blink .8s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  /* ============ SCREEN 4: FINALE ============ */
+  .final-title { font-family:'Dancing Script'; font-size:clamp(44px, 11vw, 90px); color:#e0568f; animation:beat 1.4s infinite; }
+  @keyframes beat { 0%,100%{transform:scale(1)} 12%{transform:scale(1.07)} 24%{transform:scale(1)} }
+  .final-sub { font-size:clamp(15px, 3.4vw, 20px); }
+
+  /* ============ EFEK: BALON, HATI, CONFETTI ============ */
+  .balloon {
+    position:fixed; bottom:-140px; z-index:1;
+    width:56px; height:70px;
+    border-radius:50% 50% 50% 50% / 55% 55% 45% 45%;
+    animation:rise linear forwards; pointer-events:none;
+  }
+  .balloon::after { content:""; position:absolute; top:99%; left:50%; width:2px; height:64px; background:rgba(0,0,0,.14); }
+  @keyframes rise { to { transform:translateY(-140vh); } }
+
+  .rain-heart { position:fixed; top:-8vh; z-index:1; pointer-events:none; animation:fall linear forwards; }
+  @keyframes fall { to { transform:translateY(120vh) rotate(360deg); } }
+
+  #confetti { position:fixed; inset:0; z-index:60; pointer-events:none; }
+  .music-btn {
+    position:fixed; top:16px; right:16px; z-index:70;
+    width:46px; height:46px; border:none; border-radius:50%;
+    background:rgba(255,255,255,.8); font-size:20px; cursor:pointer;
+    box-shadow:0 6px 16px rgba(180,120,160,.3);
+  }
+</style>
+</head>
+<body>
+
+<canvas id="confetti"></canvas>
+<button id="musicBtn" class="music-btn hidden">🔊</button>
+
+<!-- SCREEN 1: AMPLOP -->
+<div class="screen active" id="s1">
+  <div class="envelope" id="envelope">
+    <div class="env-back"></div>
+    <div class="env-letter" id="envName">Untukmu ❤️</div>
+    <div class="env-front"></div>
+    <div class="env-flap"></div>
+    <div class="env-heart">💖</div>
+  </div>
+  <p class="hint">Tap amplopnya untuk membuka 💌</p>
+</div>
+
+<!-- SCREEN 2: KUE -->
+<div class="screen" id="s2">
+  <div class="title-box">
+    <h1 class="big-title" id="bigTitle"></h1>
+    <p class="big-sub" id="bigSub">❤️</p>
+  </div>
+  <div class="cake-wrap">
+    <div class="layer top">
+      <div class="icing"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      <div class="candles">
+        <div class="candle"><span class="wick"></span><span class="flame"></span><span class="smoke"></span></div>
+        <div class="candle"><span class="wick"></span><span class="flame"></span><span class="smoke"></span></div>
+        <div class="candle"><span class="wick"></span><span class="flame"></span><span class="smoke"></span></div>
+        <div class="candle"><span class="wick"></span><span class="flame"></span><span class="smoke"></span></div>
+        <div class="candle"><span class="wick"></span><span class="flame"></span><span class="smoke"></span></div>
+      </div>
+    </div>
+    <div class="layer bottom">
+      <div class="icing"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+    </div>
+    <div class="plate"></div>
+  </div>
+  <p class="hint" id="cakeHint">Pejamkan mata, ucapkan keinginanmu… lalu klik lilinnya untuk meniupnya 🌬️</p>
+  <button class="btn hidden" id="toLetterBtn">Buka Surat Untukmu 💌</button>
+</div>
+
+<!-- SCREEN 3: SURAT -->
+<div class="screen" id="s3">
+  <div class="paper" id="paperText"></div>
+  <button class="btn" id="toFinalBtn">Satu hal terakhir… ❤️</button>
+</div>
+
+<!-- SCREEN 4: FINALE -->
+<div class="screen" id="s4">
+  <h1 class="final-title">I Love You ❤️</h1>
+  <p class="final-sub" id="finalSign"></p>
+</div>
+
+<script>
+/* =====================================================
+   ✏️ UBAH BAGIAN INI SESUAI KEINGINANMU
+===================================================== */
+const NAMA_PACAR = "Sayangku";  // 👈 ganti dengan nama pacarmu
+const NAMA_KAMU  = "Aku";       // 👈 ganti dengan nama / panggilanmu
+
+const PESAN_SURAT =
+`Selamat ulang tahun, sayangku 🎂
+
+Semoga di umur yang baru ini kamu selalu diberikan kesehatan, dimudahkan dalam setiap urusan, dan apa pun yang lagi kamu usahakan bisa berjalan dengan baik. Semoga kamu juga bisa jadi versi terbaik dari diri kamu sendiri dan bisa mencapai hal-hal yang kamu inginkan, satu per satu.
+
+Makasih udah hadir dan jadi bagian dari hidup aku. Makasih juga buat semua waktu, perhatian, dan hal-hal kecil yang mungkin kadang nggak aku bilang, tapi sebenarnya aku hargai. Semoga ke depannya kita bisa sama-sama belajar, tumbuh, dan saling support satu sama lain.
+
+Semoga tahun ini membawa banyak hal baik buat kamu. Jangan lupa bahagia dan nikmati hari kamu. Happy birthday sekali lagi, semoga panjang umur dan selalu dikelilingi hal-hal baik ❤️
+
+Selalu sehat, bahagia, dan semua mimpi-mimpimu tercapai. Dan semoga setiap ulang tahunmu berikutnya, kita rayakan bersama-sama. ❤️`;
+/* ===================================================== */
+
+const $ = s => document.querySelector(s);
+document.title = `Happy Birthday 🎂`;
+$('#envName').textContent = `Untuk Akhmad Abdul Rasad ❤️`;
+$('#bigTitle').textContent = `Happy Birthday, Sayangkuuu`;
+$('#finalSign').textContent = `— dengan cinta, Yanti`;
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  $(id).classList.add('active');
+}
+
+/* ---------- MUSIK "HAPPY BIRTHDAY" (WebAudio synth) ---------- */
+let audio = null, muted = false;
+const BEAT = 0.42;
+const MELODY = [
+  [392,.75],[392,.25],[440,1],[392,1],[523.25,1],[493.88,2],
+  [392,.75],[392,.25],[440,1],[392,1],[587.33,1],[523.25,2],
+  [392,.75],[392,.25],[783.99,1],[659.25,1],[523.25,1],[493.88,1],[440,2],
+  [698.46,.75],[698.46,.25],[659.25,1],[523.25,1],[587.33,1],[523.25,2]
+];
+function note(f, t, d){
+  const o = audio.createOscillator(), g = audio.createGain();
+  o.type = 'triangle'; o.frequency.value = f;
+  g.gain.setValueAtTime(0, t);
+  g.gain.linearRampToValueAtTime(.16, t + .02);
+  g.gain.exponentialRampToValueAtTime(.001, t + d + .3);
+  o.connect(g).connect(audio.destination); o.start(t); o.stop(t + d + .4);
+}
+function scheduleLoop(){
+  if (!audio) return;
+  let t = audio.currentTime + .1;
+  for (const [f, b] of MELODY){ note(f, t, b * BEAT * .95); t += b * BEAT; }
+  setTimeout(scheduleLoop, (t - audio.currentTime + 1.2) * 1000);
+}
+function initAudio(){
+  if (audio) return;
+  audio = new (window.AudioContext || window.webkitAudioContext)();
+  scheduleLoop();
+  $('#musicBtn').classList.remove('hidden');
+}
+$('#musicBtn').addEventListener('click', () => {
+  muted = !muted;
+  muted ? audio.suspend() : audio.resume();
+  $('#musicBtn').textContent = muted ? '🔇' : '🔊';
+});
+
+/* ---------- CONFETTI (canvas) ---------- */
+const canvas = $('#confetti'), ctx = canvas.getContext('2d');
+let W, H, pieces = [], running = false;
+const COLORS = ['#ff7bac','#ffd34d','#b79bff','#7dd8ff','#ff9d7b','#ffffff'];
+function resize(){ W = canvas.width = innerWidth; H = canvas.height = innerHeight; }
+resize(); addEventListener('resize', resize);
+function burst(x, y, n){
+  for (let i = 0; i < n; i++){
+    pieces.push({
+      x, y, vx:(Math.random()-.5)*9, vy:Math.random()*-9-3,
+      g:.22+Math.random()*.15, s:6+Math.random()*6,
+      r:Math.random()*Math.PI, vr:(Math.random()-.5)*.3,
+      c:COLORS[(Math.random()*COLORS.length)|0], life:140+Math.random()*60
+    });
+  }
+  if (!running){ running = true; requestAnimationFrame(tick); }
+}
+function tick(){
+  ctx.clearRect(0, 0, W, H);
+  pieces = pieces.filter(p => p.life > 0 && p.y < H + 30);
+  for (const p of pieces){
+    p.vy += p.g; p.x += p.vx; p.y += p.vy; p.r += p.vr; p.life--;
+    ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r);
+    ctx.globalAlpha = Math.max(0, Math.min(1, p.life / 40));
+    ctx.fillStyle = p.c;
+    ctx.fillRect(-p.s/2, -p.s/2, p.s, p.s * .6);
+    ctx.restore();
+  }
+  if (pieces.length) requestAnimationFrame(tick);
+  else { running = false; ctx.clearRect(0, 0, W, H); }
+}
+
+/* ---------- BALON & HUJAN HATI ---------- */
+function spawnBalloons(n){
+  const cols = ['#ff8fb3','#b79bff','#7dd8ff','#ffd34d','#ff9d7b'];
+  for (let i = 0; i < n; i++){
+    const b = document.createElement('div');
+    b.className = 'balloon';
+    const c = cols[(Math.random()*cols.length)|0];
+    b.style.left = (2 + Math.random()*88) + 'vw';
+    b.style.background = `radial-gradient(circle at 30% 30%, rgba(255,255,255,.7), transparent 45%), ${c}`;
+    b.style.animationDuration = (6 + Math.random()*5) + 's';
+    b.style.animationDelay = (Math.random()*2) + 's';
+    b.addEventListener('animationend', () => b.remove());
+    document.body.appendChild(b);
+  }
+}
+function spawnHearts(n){
+  const emo = ['❤️','💖','💕','💗','💘'];
+  for (let i = 0; i < n; i++){
+    const h = document.createElement('span');
+    h.className = 'rain-heart';
+    h.textContent = emo[(Math.random()*emo.length)|0];
+    h.style.left = Math.random()*100 + 'vw';
+    h.style.fontSize = (14 + Math.random()*22) + 'px';
+    h.style.animationDuration = (4 + Math.random()*5) + 's';
+    h.style.animationDelay = (Math.random()*5) + 's';
+    h.addEventListener('animationend', () => h.remove());
+    document.body.appendChild(h);
+  }
+}
+
+/* ---------- ALUR CERITA ---------- */
+let opened = false;
+$('#envelope').addEventListener('click', () => {
+  if (opened) return; opened = true;
+  $('#envelope').classList.add('open');
+  initAudio();
+  setTimeout(() => showScreen('#s2'), 1500);
+});
+
+let outCount = 0;
+const candles = [...document.querySelectorAll('.candle')];
+candles.forEach(c => c.addEventListener('click', () => {
+  if (c.classList.contains('out')) return;
+  c.classList.add('out');
+  if (++outCount === candles.length) setTimeout(celebrate, 600);
+}));
+function celebrate(){
+  $('#bigTitle').classList.add('show');
+  $('#bigSub').classList.add('show');
+  $('#cakeHint').classList.add('hidden');
+  $('#toLetterBtn').classList.remove('hidden');
+  burst(W/2, H*.35, 160);
+  setTimeout(() => burst(W*.2, H*.4, 80), 300);
+  setTimeout(() => burst(W*.8, H*.4, 80), 600);
+  spawnBalloons(10);
+}
+
+$('#paperText').textContent = PESAN_SURAT; // teks langsung tampil penuh seperti kertas
+$('#toLetterBtn').addEventListener('click', () => {
+  showScreen('#s3');
+});
+
+$('#toFinalBtn').addEventListener('click', () => {
+  showScreen('#s4');
+  spawnHearts(70);
+  burst(W/2, H*.3, 200);
+});
+</script>
+</body>
+</html>
